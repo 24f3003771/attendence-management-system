@@ -1,0 +1,103 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Admin {
+  id           String     @id @default(uuid())
+  email        String     @unique
+  passwordHash String
+  name         String
+  createdAt    DateTime   @default(now())
+  auditLogs    AuditLog[]
+  employees    Employee[]
+}
+
+model Employee {
+  id           String         @id @default(uuid())
+  employeeCode String         @unique
+  name         String
+  passwordHash String
+  officeId     String
+  deviceId     String?
+  status       EmployeeStatus @default(ACTIVE)
+  createdById  String
+  createdAt    DateTime       @default(now())
+  office       Office         @relation(fields: [officeId], references: [id])
+  createdBy    Admin          @relation(fields: [createdById], references: [id])
+  attendances  Attendance[]
+}
+
+enum EmployeeStatus {
+  ACTIVE
+  INACTIVE
+}
+
+model Office {
+  id        String    @id @default(uuid())
+  name      String
+  latitude  Float
+  longitude Float
+  radiusM   Int       @default(100)
+  qrSecret  String    @default(uuid())
+  createdAt DateTime  @default(now())
+  employees Employee[]
+  qrTokens  QrToken[]
+}
+
+model QrToken {
+  id        String    @id @default(uuid())
+  officeId  String
+  token     String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  office    Office    @relation(fields: [officeId], references: [id])
+}
+
+model Attendance {
+  id         String           @id @default(uuid())
+  employeeId String
+  type       AttendanceType
+  serverTime DateTime         @default(now())
+  latitude   Float
+  longitude  Float
+  accuracyM  Float
+  altitude   Float?
+  provider   String?
+  deviceId   String
+  qrTokenId  String
+  photoUrl   String?
+  status     AttendanceStatus @default(VALID)
+  flagReason String?
+  employee   Employee         @relation(fields: [employeeId], references: [id])
+}
+
+enum AttendanceType {
+  IN
+  OUT
+}
+
+enum AttendanceStatus {
+  VALID
+  FLAGGED
+  REJECTED
+}
+
+model AuditLog {
+  id       String   @id @default(uuid())
+  adminId  String
+  action   String
+  target   String
+  oldValue String?
+  newValue String?
+  time     DateTime @default(now())
+  admin    Admin    @relation(fields: [adminId], references: [id])
+}

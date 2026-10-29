@@ -1,0 +1,30 @@
+{
+  "expo": {
+    "name": "Attendance",
+    "slug": "attendance-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "platforms": ["android"],
+    "android": {
+      "package": "com.company.attendance",
+      "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION", "CAMERA"]
+    },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow Attendance app to use the camera to scan QR codes."
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow Attendance to read your GPS location."
+        }
+      ]
+    ],
+    "extra": {
+      "apiUrl": "http://YOUR_SERVER_IP:3000"
+    }
+  }
+}
