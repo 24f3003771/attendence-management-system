@@ -12,7 +12,10 @@ const apiClient = axios.create({
 // ─── Request interceptor: attach Bearer token ─────────────────────────────────
 apiClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('admin_token');
+    const isEmployee = window.location.pathname.startsWith('/employee');
+    const token = isEmployee
+      ? (localStorage.getItem('employee_token') || localStorage.getItem('admin_token'))
+      : (localStorage.getItem('admin_token') || localStorage.getItem('employee_token'));
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -26,9 +29,13 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('admin_token');
-      // Redirect to login without importing router (avoids circular deps)
-      window.location.href = '/login';
+      if (window.location.pathname.startsWith('/employee')) {
+        localStorage.removeItem('employee_token');
+        window.location.href = '/employee/login';
+      } else {
+        localStorage.removeItem('admin_token');
+        window.location.href = '/login';
+      }
     }
     return Promise.reject(error);
   },

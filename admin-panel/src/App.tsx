@@ -2,6 +2,8 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';
 import LoginPage from './pages/LoginPage';
+import EmployeeLoginPage from './pages/employee/EmployeeLoginPage';
+import EmployeePortalPage from './pages/employee/EmployeePortalPage';
 import DashboardPage from './pages/DashboardPage';
 import EmployeesPage from './pages/EmployeesPage';
 import OfficePage from './pages/OfficePage';
@@ -12,8 +14,12 @@ import ReportsPage from './pages/ReportsPage';
 const App: React.FC = () => {
   return (
     <Routes>
-      {/* Public */}
+      {/* Public Admin Login */}
       <Route path="/login" element={<LoginPage />} />
+
+      {/* Employee Mobile Web App */}
+      <Route path="/employee/login" element={<EmployeeLoginPage />} />
+      <Route path="/employee" element={<EmployeePortalPage />} />
 
       {/* Full-screen QR display (no sidebar) – still guards auth inside */}
       <Route path="/offices/:id/qr" element={<QRDisplayPage />} />

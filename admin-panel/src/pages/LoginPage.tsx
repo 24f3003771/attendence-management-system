@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { LockClosedIcon, EnvelopeIcon, QrCodeIcon } from '@heroicons/react/24/outline';
@@ -117,6 +117,16 @@ const LoginPage: React.FC = () => {
               )}
             </button>
           </form>
+
+          {/* Switch to Employee Mobile Portal */}
+          <div className="mt-6 pt-5 border-t border-slate-100 text-center">
+            <Link
+              to="/employee/login"
+              className="inline-flex items-center gap-1.5 text-xs text-indigo-600 hover:text-indigo-800 font-semibold"
+            >
+              <span>📱 Are you an Employee? Go to Employee Punch Portal →</span>
+            </Link>
+          </div>
         </div>
 
         <p className="text-center text-xs text-slate-400 mt-6">
